@@ -29,8 +29,9 @@ def link_roles_to_user(user_id: str, roles=None) -> None:
 
     for role in roles:
         if role not in current_roles:
-            new_role = next(filter(lambda r: r.get("name") == role, available_roles), None)
-            roles_to_add.add(new_role)
+            new_role = next(map(lambda r: r.get("id"), filter(lambda r: r.get("name") == role, available_roles)), None)
+            if new_role is not None:
+                roles_to_add.add(new_role)
 
     if len(roles_to_add):
         role_manager.add(list(roles_to_add))
@@ -51,7 +52,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
         )
     )
     # If a federated identity is provided to check against
-    if (federated_user_id or check_federated_user) and federated_provider:
+    if federated_user_id or check_federated_user:
         for user in users:
             # Get the first matching identity or None
             federated_identity = next(
