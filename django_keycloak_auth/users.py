@@ -25,16 +25,16 @@ def link_roles_to_user(user_id: str, roles=None) -> None:
         )
     )
     available_roles = role_manager.available()
-    roles_to_add = set()
+    roles_to_add = []
 
     for role in roles:
         if role not in current_roles:
-            new_role = next(map(lambda r: r.get("id"), filter(lambda r: r.get("name") == role, available_roles)), None)
+            new_role = next(filter(lambda r: r.get("name") == role, available_roles), None)
             if new_role is not None:
-                roles_to_add.add(new_role)
+                roles_to_add.append(new_role)
 
     if len(roles_to_add):
-        role_manager.add(list(roles_to_add))
+        role_manager.add(roles_to_add)
 
 
 def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
