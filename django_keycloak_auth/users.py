@@ -11,6 +11,31 @@ def get_user_by_id(user_id: str) -> keycloak.admin.users.User:
     return admin_client.users.by_id(user_id)
 
 
+def link_roles_to_user(user_id: str, roles=None) -> None:
+    if roles is None:
+        roles = []
+
+    user = get_user_by_id(user_id)
+    role_manager = user.role_mappings.realm
+
+    current_roles = list(
+        map(
+            lambda r: r.get("name"),
+            role_manager.get()
+        )
+    )
+    available_roles = role_manager.available()
+    roles_to_add = set()
+
+    for role in roles:
+        if role not in current_roles:
+            new_role = next(filter(lambda r: r.get("name") == role, available_roles), None)
+            roles_to_add.add(new_role)
+
+    if len(roles_to_add):
+        role_manager.add(list(roles_to_add))
+
+
 def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
                        check_federated_user=None, email=None, **kwargs) -> keycloak.admin.users.User:
     if not callable(check_federated_user):
@@ -26,7 +51,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
         )
     )
     # If a federated identity is provided to check against
-    if (federated_provider or check_federated_user) and federated_user_id:
+    if (federated_user_id or check_federated_user) and federated_provider:
         for user in users:
             # Get the first matching identity or None
             federated_identity = next(

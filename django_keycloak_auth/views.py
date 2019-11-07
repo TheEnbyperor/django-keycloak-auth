@@ -88,4 +88,4 @@ class Logout(django.views.generic.RedirectView):
                 django.conf.settings.LOGOUT_REDIRECT_URL
             )
 
-        return django.urls.reverse("keycloak_login")
+        return django.urls.reverse("oidc_login")
