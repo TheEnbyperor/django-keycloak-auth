@@ -2,6 +2,7 @@ from . import clients
 import keycloak.admin.users
 import keycloak.admin.clientroles
 import secrets
+import json
 
 BASIC_FIELDS = ("email", "email_verified", "first_name", "last_name")
 
@@ -38,8 +39,8 @@ def link_roles_to_user(user_id: str, roles=None) -> None:
 
 
 def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
-                       check_federated_user=None, email=None, **kwargs) -> keycloak.admin.users.User:
-    if not callable(check_federated_user):
+                       check_federated_user=None, email=None, required_actions=None, **kwargs) -> keycloak.admin.users.User:
+    if check_federated_user and not callable(check_federated_user):
         raise TypeError("check_federated_user must be callable")
 
     admin_client = clients.get_keycloak_admin_client()
@@ -96,7 +97,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
                 return user
 
     # If neither worked and the appropriate data is available; create a new user
-    if email and federated_provider and federated_user_id and federated_user_name:
+    if email:
         def username_exists(username):
             return next(
                 filter(
@@ -104,7 +105,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
                     users
                 ),
                 None
-            ) is None
+            ) is not None
 
         preferred_username = email
         while username_exists(preferred_username):
@@ -121,14 +122,25 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
         admin_client.users.create(
             username=preferred_username,
             email=email,
+            enabled=True,
             federated_identities=[{
                 "identityProvider": federated_provider,
                 "userId": federated_user_id,
                 "userName": federated_user_name,
-            }],
+            }] if federated_provider and federated_user_id and federated_user_name else [],
             attributes=attributes,
             **fields
         )
+
+        user = next(
+            filter(
+                lambda u: u.get("username") == preferred_username,
+                admin_client.users.all(),
+            )
+        )
+        if required_actions is not None:
+            user_required_actions(user.get("id"), required_actions)
+        return user
 
 
 def link_federated_identity_if_not_exists(user_id: str, federated_user_id=None, federated_user_name=None,
@@ -175,4 +187,17 @@ def update_user(user_id: str, force_update=False, **kwargs) -> None:
     user.update(
         attributes=attributes,
         **kwargs
+    )
+
+
+def user_required_actions(user_id: str, actions: [str], lifespan=2592000) -> None:
+    admin_client = clients.get_keycloak_admin_client()
+    user = admin_client.users.by_id(user_id)
+
+    user._client.put(
+        url=user._client.get_full_url(
+            (user._BASE + "/execute-actions-email?lifespan={lifespan}")
+                .format(realm=user._realm_name, user_id=user_id, lifespan=lifespan)
+        ),
+        data=json.dumps(actions)
     )
