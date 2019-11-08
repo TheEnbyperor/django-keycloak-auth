@@ -196,4 +196,5 @@ def get_active_access_token(oidc_profile):
 
 def get_entitlement(oidc_profile):
     access_token = get_active_access_token(oidc_profile=oidc_profile)
+    get_openid_connect_client()
     return get_authz_client().get_permissions(access_token)

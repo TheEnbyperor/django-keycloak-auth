@@ -1,11 +1,9 @@
-import collections
-
 import django.apps
 import django.conf
 import django.utils.text
 import keycloak.exceptions
 from django.core.management.base import BaseCommand, CommandError
-from keycloak_auth import clients
+from django_keycloak_auth import clients
 
 
 class Command(BaseCommand):

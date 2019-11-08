@@ -81,7 +81,14 @@ class KeycloakAuthorization:
     def get_user(self, user_id):
         UserModel = django.contrib.auth.get_user_model()
         try:
-            return UserModel.objects.get(pk=user_id)
+            user_obj = UserModel.objects.get(pk=user_id)
+
+            try:
+                clients.get_entitlement(oidc_profile=user_obj.oidc_profile)
+            except clients.TokensExpired:
+                return None
+
+            return user_obj
         except UserModel.DoesNotExist:
             return None
 
