@@ -1,2 +1,2 @@
 Django
-python-keycloak-client
+git+https://github.com/Peter-Slump/python-keycloak-client.git@master
