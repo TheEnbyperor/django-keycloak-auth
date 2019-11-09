@@ -3,8 +3,24 @@ import keycloak.admin.users
 import keycloak.admin.clientroles
 import secrets
 import json
+import random
+import os
 
 BASIC_FIELDS = ("email", "email_verified", "first_name", "last_name")
+with open(os.path.join(os.path.dirname(__file__), "words.txt")) as f:
+    WORDS = list(map(lambda l: l.strip(), f.readlines()))
+
+
+def get_users() -> [keycloak.admin.users.User]:
+    admin_client = clients.get_keycloak_admin_client()
+    users = list(
+        map(
+            # Get a list of all user ID, then expand each ID to a full user object
+            lambda u: admin_client.users.by_id(u.get("id")),
+            admin_client.users.all(),
+        )
+    )
+    return users
 
 
 def get_user_by_id(user_id: str) -> keycloak.admin.users.User:
@@ -96,51 +112,56 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
 
                 return user
 
-    # If neither worked and the appropriate data is available; create a new user
-    if email:
-        def username_exists(username):
-            return next(
-                filter(
-                    lambda u: u.get("username") == username,
-                    users
-                ),
-                None
-            ) is not None
-
-        preferred_username = email
-        while username_exists(preferred_username):
-            preferred_username = secrets.token_hex(16)
-
-        attributes = {}
-        fields = {}
-        for k, v in kwargs.items():
-            if k in BASIC_FIELDS:
-                fields[k] = v
-            else:
-                attributes[k] = v
-
-        admin_client.users.create(
-            username=preferred_username,
-            email=email,
-            enabled=True,
-            federated_identities=[{
-                "identityProvider": federated_provider,
-                "userId": federated_user_id,
-                "userName": federated_user_name,
-            }] if federated_provider and federated_user_id and federated_user_name else [],
-            attributes=attributes,
-            **fields
-        )
-
-        user = next(
+    # If neither worked; create a new user
+    def username_exists(username):
+        return next(
             filter(
-                lambda u: u.get("username") == preferred_username,
-                admin_client.users.all(),
-            )
+                lambda u: u.get("username") == username,
+                users
+            ),
+            None
+        ) is not None
+
+    def gen_username(num=3):
+        return "-".join(list(map(lambda _: random.choice(WORDS), range(num))))
+
+    preferred_username = email if email else gen_username()
+    while username_exists(preferred_username):
+        preferred_username = gen_username()
+
+    attributes = {}
+    fields = {}
+    for k, v in kwargs.items():
+        if k in BASIC_FIELDS:
+            fields[k] = v
+        else:
+            attributes[k] = v
+
+    if email:
+        fields["email"] = email
+
+    admin_client.users.create(
+        username=preferred_username,
+        enabled=True,
+        federated_identities=[{
+            "identityProvider": federated_provider,
+            "userId": federated_user_id,
+            "userName": federated_user_name,
+        }] if federated_provider and federated_user_id and federated_user_name else [],
+        attributes=attributes,
+        required_actions=required_actions,
+        **fields
+    )
+
+    user = next(
+        filter(
+            lambda u: u.get("username") == preferred_username,
+            admin_client.users.all(),
         )
-        if required_actions is not None:
-            user_required_actions(user.get("id"), required_actions)
-        return user
+    )
+    if required_actions is not None and email:
+        user_required_actions(user.get("id"), required_actions)
+    return user
 
 
 def link_federated_identity_if_not_exists(user_id: str, federated_user_id=None, federated_user_name=None,
