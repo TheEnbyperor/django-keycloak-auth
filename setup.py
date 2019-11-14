@@ -9,5 +9,8 @@ setup(name='django-keycloak-auth',
       install_requires=['python-keycloak-client'],
       dependency_links=['https://github.com/Peter-Slump/python-keycloak-client/tarball/master#egg=python-keycloak-client'],
       packages=find_packages(),
-     )
+      package_data={
+        "django_keycloak_auth": ["words.txt"]
+      }
+)
 
