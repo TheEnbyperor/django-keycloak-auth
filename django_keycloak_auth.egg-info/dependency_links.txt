@@ -1,1 +1,1 @@
-https://github.com/Peter-Slump/python-keycloak-client/tarball/master#egg=python-keycloak-client
+

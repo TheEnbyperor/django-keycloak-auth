@@ -1,4 +1,5 @@
 from . import clients
+import django.conf
 import keycloak.admin.users
 import keycloak.admin.clientroles
 import secrets
@@ -221,4 +222,15 @@ def user_required_actions(user_id: str, actions: [str], lifespan=2592000) -> Non
                 .format(realm=user._realm_name, user_id=user_id, lifespan=lifespan)
         ),
         data=json.dumps(actions)
+    )
+
+def get_user_magic_key(user_id: str, lifespan=18000) -> None:
+    admin_client = clients.get_keycloak_client().admin
+    admin_client.set_token(clients.get_access_token())
+
+    return admin_client.get(
+        url=admin_client.get_full_url(
+            'auth/realms/{realm}/magic-key/{id}?exp={lifespan}'
+                .format(realm=django.conf.settings.KEYCLOAK_REALM, id=user_id, lifespan=lifespan)
+        )
     )

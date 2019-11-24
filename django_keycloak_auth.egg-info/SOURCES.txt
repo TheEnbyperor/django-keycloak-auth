@@ -12,6 +12,7 @@ django_keycloak_auth/tests.py
 django_keycloak_auth/urls.py
 django_keycloak_auth/users.py
 django_keycloak_auth/views.py
+django_keycloak_auth/words.txt
 django_keycloak_auth.egg-info/PKG-INFO
 django_keycloak_auth.egg-info/SOURCES.txt
 django_keycloak_auth.egg-info/dependency_links.txt
