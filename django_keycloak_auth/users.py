@@ -208,7 +208,7 @@ def update_user(user_id: str, force_update=False, **kwargs) -> None:
                 attributes[k] = v
     user.update(
         attributes=attributes,
-        **kwargs
+        **new_values
     )
 
 
