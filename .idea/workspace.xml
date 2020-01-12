@@ -24,7 +24,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b234902-0f3e-4d1f-a07a-89aa117c68a2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -75,45 +77,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/django_keycloak_auth/users.py" />
-      </list>
-    </option>
-  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="hlBePMTK" />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="width" value="1600" />
-    <option name="height" value="881" />
-  </component>
   <component name="ProjectId" id="1RNjOF1nKfms8l3OCeuKWXxjEZB" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="django-keycloak-auth" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django-keycloak-auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="django-keycloak-auth" type="b2602c69:ProjectViewProjectNode" />
-              <item name="django-keycloak-auth" type="462c0819:PsiDirectoryNode" />
-              <item name="django_keycloak_auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />

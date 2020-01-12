@@ -179,7 +179,7 @@ def link_federated_identity_if_not_exists(user_id: str, federated_user_id=None, 
         None,
     )
     if not federated_identity:
-        federated_identities.push(
+        federated_identities.append(
             {
                 "identityProvider": federated_provider,
                 "userId": federated_user_id,
@@ -223,6 +223,7 @@ def user_required_actions(user_id: str, actions: [str], lifespan=2592000) -> Non
         ),
         data=json.dumps(actions)
     )
+
 
 def get_user_magic_key(user_id: str, lifespan=18000) -> None:
     admin_client = clients.get_keycloak_client().admin
