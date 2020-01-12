@@ -29,6 +29,7 @@ class Login(django.views.generic.RedirectView):
             redirect_uri=nonce.redirect_uri,
             scope=django.conf.settings.OIDC_SCOPES,
             state=str(nonce.state),
+            key=self.request.GET.get("key")
         )
 
         return authorization_url
