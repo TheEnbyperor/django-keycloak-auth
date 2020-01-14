@@ -4,6 +4,7 @@ import django.contrib.auth
 import django.db.transaction
 import django.utils.timezone
 import keycloak.realm
+import keycloak.exceptions
 import keycloak.admin.realm
 import django.conf
 import typing
@@ -181,9 +182,12 @@ def get_active_access_token(oidc_profile):
 
     if initiate_time > oidc_profile.expires_before:
         # Refresh token
-        token_response = get_openid_connect_client().refresh_token(
-            refresh_token=oidc_profile.refresh_token
-        )
+        try:
+            token_response = get_openid_connect_client().refresh_token(
+                refresh_token=oidc_profile.refresh_token
+            )
+        except keycloak.exceptions.KeycloakClientError:
+            raise TokensExpired()
 
         oidc_profile = update_tokens(
             token_model=oidc_profile,
