@@ -19,17 +19,18 @@ def get_users() -> [keycloak.admin.users.User]:
 
     users = []
     first = 0
+    inc = 500
     while True:
         new_users = admin_client.users._client.get(
             url=admin_client.users._client.get_full_url(
-                "/auth/admin/realms/{realm}/users?first={first}&max=100"
-                    .format(realm=admin_client.users._realm_name, first=first)
+                "/auth/admin/realms/{realm}/users?first={first}&max={inc}"
+                    .format(realm=admin_client.users._realm_name, first=first, inc=inc)
             ),
         )
         users.extend(new_users)
-        if len(new_users) < 100:
+        if len(new_users) < inc:
             break
-        first += 100
+        first += inc
 
     users = list(
         map(
