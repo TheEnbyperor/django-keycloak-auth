@@ -158,7 +158,6 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
     if email:
         fields["email"] = email
 
-    print(preferred_username, fields)
     payload = {
         "username": preferred_username,
         "enabled": True,
