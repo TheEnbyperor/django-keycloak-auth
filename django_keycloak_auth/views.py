@@ -84,6 +84,10 @@ class Logout(django.views.generic.RedirectView):
 
         django.contrib.auth.logout(self.request)
 
+        next = self.request.GET.get("next")
+        if next:
+            return next
+
         if django.conf.settings.LOGOUT_REDIRECT_URL:
             return django.shortcuts.resolve_url(
                 django.conf.settings.LOGOUT_REDIRECT_URL
