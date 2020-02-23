@@ -4,8 +4,10 @@ import keycloak.admin.users
 import keycloak.admin.clientroles
 import secrets
 import json
+import time
 import random
 import os
+from keycloak.admin.clientroles import to_camel_case
 
 BASIC_FIELDS = ("email", "email_verified", "first_name", "last_name")
 with open(os.path.join(os.path.dirname(__file__), "words.txt")) as f:
@@ -14,11 +16,27 @@ with open(os.path.join(os.path.dirname(__file__), "words.txt")) as f:
 
 def get_users() -> [keycloak.admin.users.User]:
     admin_client = clients.get_keycloak_admin_client()
+
+    users = []
+    first = 0
+    inc = 500
+    while True:
+        new_users = admin_client.users._client.get(
+            url=admin_client.users._client.get_full_url(
+                "/auth/admin/realms/{realm}/users?first={first}&max={inc}"
+                    .format(realm=admin_client.users._realm_name, first=first, inc=inc)
+            ),
+        )
+        users.extend(new_users)
+        if len(new_users) < inc:
+            break
+        first += inc
+
     users = list(
         map(
             # Get a list of all user ID, then expand each ID to a full user object
             lambda u: admin_client.users.by_id(u.get("id")),
-            admin_client.users.all(),
+            users,
         )
     )
     return users
@@ -141,25 +159,29 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
     if email:
         fields["email"] = email
 
-    admin_client.users.create(
-        username=preferred_username,
-        enabled=True,
-        federated_identities=[{
+    payload = {
+        "username": preferred_username,
+        "enabled": True,
+        "federatedIdentities": [{
             "identityProvider": federated_provider,
             "userId": federated_user_id,
             "userName": federated_user_name,
         }] if federated_provider and federated_user_id and federated_user_name else [],
-        attributes=attributes,
-        required_actions=required_actions,
-        **fields
+        "attributes": attributes,
+        "requiredActions": required_actions
+    }
+    for key in fields:
+        payload[to_camel_case(key)] = fields[key]
+    r = admin_client.users._client._realm.client.session.post(
+        url=admin_client.users._client.get_full_url(
+             "/auth/admin/realms/{realm}/users".format(realm=admin_client.users._realm_name)
+        ),
+        data=json.dumps(payload),
+        headers=admin_client.users._client._add_auth_header(headers=None)
     )
+    r.raise_for_status()
+    user = admin_client.users.by_id(r.headers["Location"].split("/")[-1]).user
 
-    user = next(
-        filter(
-            lambda u: u.get("username") == preferred_username,
-            admin_client.users.all(),
-        )
-    )
     if required_actions is not None and email:
         user_required_actions(user.get("id"), required_actions)
     return user
