@@ -134,17 +134,18 @@ def get_user_by_federated_identity(federated_user_id=None, federated_user_name=N
 
 def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
                        check_federated_user=None, email=None, required_actions=None, **kwargs) -> keycloak.admin.users.User:
-    user = get_user_by_federated_identity(
-        federated_user_id, federated_user_name, federated_provider, check_federated_user, email
-    )
-    if user:
-        return user
+    if federated_user_id or check_federated_user or email:
+        user = get_user_by_federated_identity(
+            federated_user_id, federated_user_name, federated_provider, check_federated_user, email
+        )
+        if user:
+            return user
 
     admin_client = clients.get_keycloak_admin_client()
     users = list(
         map(
             # Get a list of all user ID, then expand each ID to a full user object
-            lambda u: admin_client.users.by_id(u.get("id")).user,
+            lambda u: admin_client.users.by_id(u.get("id")),
             admin_client.users.all(),
         )
     )
