@@ -79,7 +79,6 @@ def get_user_by_federated_identity(federated_user_id=None, federated_user_name=N
         raise TypeError("check_federated_user must be callable")
 
     admin_client = clients.get_keycloak_admin_client()
-
     users = list(
         map(
             # Get a list of all user ID, then expand each ID to a full user object
@@ -141,6 +140,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
     if user:
         return user
 
+    admin_client = clients.get_keycloak_admin_client()
     users = list(
         map(
             # Get a list of all user ID, then expand each ID to a full user object
