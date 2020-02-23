@@ -141,6 +141,14 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
     if user:
         return user
 
+    users = list(
+        map(
+            # Get a list of all user ID, then expand each ID to a full user object
+            lambda u: admin_client.users.by_id(u.get("id")).user,
+            admin_client.users.all(),
+        )
+    )
+
     # If neither worked; create a new user
     def username_exists(username):
         return next(
@@ -150,6 +158,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
             ),
             None
         ) is not None
+
 
     def gen_username(num=3):
         return "-".join(list(map(lambda _: random.choice(WORDS), range(num))))
