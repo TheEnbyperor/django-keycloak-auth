@@ -7,6 +7,9 @@ import keycloak.realm
 import keycloak.exceptions
 import keycloak.admin.realm
 import django.conf
+import jose.jwk
+import jose.jwt
+import base64
 import typing
 
 from . import models
@@ -202,3 +205,12 @@ def get_entitlement(oidc_profile):
     access_token = get_active_access_token(oidc_profile=oidc_profile)
     get_openid_connect_client()
     return get_authz_client().get_permissions(access_token)
+
+
+def verify_token(token):
+    client = get_openid_connect_client()
+    certs = client.certs()
+    try:
+        return jose.jwt.decode(token, certs, audience=django.conf.settings.OIDC_CLIENT_ID)
+    except jose.jwt.JWTError as e:
+        raise keycloak.exceptions.KeycloakClientError(e)
