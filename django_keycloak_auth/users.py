@@ -73,8 +73,8 @@ def link_roles_to_user(user_id: str, roles=None) -> None:
         role_manager.add(roles_to_add)
 
 
-def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
-                       check_federated_user=None, email=None, required_actions=None, **kwargs) -> keycloak.admin.users.User:
+def get_user_by_federated_identity(federated_user_id=None, federated_user_name=None, federated_provider=None,
+                                   check_federated_user=None, email=None) -> keycloak.admin.users.User:
     if check_federated_user and not callable(check_federated_user):
         raise TypeError("check_federated_user must be callable")
 
@@ -128,8 +128,18 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
                     })
                     # Push user to server
                     user_o.update(federated_identities=federated_identities)
+                    return user
 
-                return user
+    return None
+
+
+def get_or_create_user(federated_user_id=None, federated_user_name=None, federated_provider=None,
+                       check_federated_user=None, email=None, required_actions=None, **kwargs) -> keycloak.admin.users.User:
+    user = get_user_by_federated_identity(
+        federated_user_id, federated_user_name, federated_provider, check_federated_user, email
+    )
+    if user:
+        return user
 
     # If neither worked; create a new user
     def username_exists(username):
