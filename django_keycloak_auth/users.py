@@ -145,7 +145,7 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
     users = list(
         map(
             # Get a list of all user ID, then expand each ID to a full user object
-            lambda u: admin_client.users.by_id(u.get("id")),
+            lambda u: admin_client.users.by_id(u.get("id")).user,
             admin_client.users.all(),
         )
     )
