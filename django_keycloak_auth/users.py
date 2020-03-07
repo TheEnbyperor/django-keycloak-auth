@@ -160,11 +160,22 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
             None
         ) is not None
 
-
     def gen_username(num=3):
         return "-".join(list(map(lambda _: random.choice(WORDS), range(num))))
 
-    preferred_username = email if email else gen_username()
+    def gen_username_from_name():
+        first_name = kwargs.get("first_name", "").strip().lower().replace(" ", "-").replace("\t", "-")
+        last_name = kwargs.get("last_name", "").strip().lower().replace(" ", "-").replace("\t", "-")
+        if first_name and last_name:
+            return f"{first_name}-{last_name}"
+        elif first_name:
+            return first_name
+        elif last_name:
+            return last_name
+
+    preferred_username = email if email else (
+        gen_username_from_name() if (kwargs.get("first_name") or kwargs.get("last_name")) else gen_username()
+    )
     while username_exists(preferred_username):
         preferred_username = gen_username()
 
