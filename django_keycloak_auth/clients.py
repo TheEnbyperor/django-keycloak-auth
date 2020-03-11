@@ -69,6 +69,14 @@ def get_uma_client():
 
 
 def get_service_account_profile():
+    UserModel = django.contrib.auth.get_user_model()
+    user = UserModel.objects.filter(email__startswith=f"service-account-{django.conf.settings.OIDC_CLIENT_ID}").first()
+    if user:
+        try:
+            oidc_profile = user.oidc_profile
+            return oidc_profile
+        except UserModel.oidc_profile.RelatedObjectDoesNotExist:
+            pass
     token_response, initiate_time = get_new_access_token()
 
     oidc_profile = update_or_create(
