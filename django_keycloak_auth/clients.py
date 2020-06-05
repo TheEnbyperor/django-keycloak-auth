@@ -87,7 +87,7 @@ def get_service_account_profile():
 
 
 def get_new_access_token():
-    scope = "realm-management openid"
+    scope = "openid"
 
     initiate_time = django.utils.timezone.now()
     token_response = get_openid_connect_client().client_credentials(scope=scope)
