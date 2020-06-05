@@ -51,7 +51,10 @@ class LoginComplete(django.views.generic.RedirectView):
         ):
             return django.http.HttpResponseRedirect(django.urls.reverse("oidc_login"))
 
-        nonce = auth.models.Nonce.objects.get(state=request.GET["state"])
+        try:
+            nonce = auth.models.Nonce.objects.get(state=request.GET["state"])
+        except auth.models.Nonce.DoesNotExist:
+            return django.http.HttpResponseRedirect(django.urls.reverse("oidc_login"))
 
         user = django.contrib.auth.authenticate(
             request=request, code=request.GET["code"], redirect_uri=nonce.redirect_uri
