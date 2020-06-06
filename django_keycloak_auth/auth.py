@@ -4,6 +4,7 @@ import django.contrib.auth.models
 import django.core.exceptions
 import django.middleware.csrf
 import django.utils.timezone
+import django.utils.text
 
 from . import clients, models
 
@@ -112,7 +113,10 @@ class KeycloakAuthorization:
             if p.get("scopes"):
                 for scope in p["scopes"]:
                     permission = p["rsname"]  # type: str
-                    app, model = permission.rsplit(".", 1)
+                    parts = permission.rsplit(".", 1)
+                    if len(parts) != 2:
+                      continue
+                    app, model = parts
                     permissions.append(f"{app}.{scope}_{model}")
             else:
                 permissions.append(p["rsname"])
