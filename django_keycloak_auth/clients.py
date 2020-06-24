@@ -164,7 +164,7 @@ def update_tokens(token_model, token_response, initiate_time):
     )
     refresh_expires_before = initiate_time + datetime.timedelta(
         seconds=token_response["refresh_expires_in"]
-    )
+    ) if token_response["refresh_expires_in"] else None
 
     token_model.access_token = token_response["access_token"]
     token_model.expires_before = expires_before
@@ -186,12 +186,14 @@ def get_active_access_token(oidc_profile):
     initiate_time = django.utils.timezone.now()
 
     if (
-        oidc_profile.refresh_expires_before is None
-        or initiate_time > oidc_profile.refresh_expires_before
+        oidc_profile.refresh_expires_before is not None
+        and initiate_time > oidc_profile.refresh_expires_before
     ):
         raise TokensExpired()
 
     if initiate_time > oidc_profile.expires_before:
+        if not oidc_profile.refresh_token:
+            raise TokensExpired()
         # Refresh token
         try:
             token_response = get_openid_connect_client().refresh_token(
