@@ -191,6 +191,9 @@ def get_active_access_token(oidc_profile):
     ):
         raise TokensExpired()
 
+    if not oidc_profile.access_token:
+        raise TokensExpired()
+
     if initiate_time > oidc_profile.expires_before:
         if not oidc_profile.refresh_token:
             raise TokensExpired()
