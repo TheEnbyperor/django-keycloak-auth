@@ -147,6 +147,7 @@ def update_or_create(token_response, initiate_time):
         key=cert,
         algorithms=client.well_known["id_token_signing_alg_values_supported"],
         issuer=client.well_known["issuer"],
+        access_token=token_response["access_token"],
     )
 
     oidc_profile = update_or_create_user_and_oidc_profile(id_token_object=token_object)
