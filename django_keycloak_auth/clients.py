@@ -19,6 +19,7 @@ _admin_client = None  # type: typing.Optional[keycloak.admin.realm.Realm]
 _oidc_client = None  # type: typing.Optional[keycloak.realm.KeycloakOpenidConnect]
 _authz_client = None  # type: typing.Optional[keycloak.realm.KeycloakAuthz]
 _uma_client = None  # type: typing.Optional[keycloak.realm.KeycloakUMA]
+_service_account_id = None  # type: typing.Optional[str]
 
 
 class TokensExpired(Exception):
@@ -69,19 +70,24 @@ def get_uma_client():
 
 
 def get_service_account_profile():
+    global _service_account_id
     UserModel = django.contrib.auth.get_user_model()
-    user = UserModel.objects.filter(email__startswith=f"service-account-{django.conf.settings.OIDC_CLIENT_ID}").first()
-    if user:
-        try:
-            oidc_profile = user.oidc_profile
-            return oidc_profile
-        except UserModel.oidc_profile.RelatedObjectDoesNotExist:
-            pass
+
+    if _service_account_id:
+        user = UserModel.objects.filter(username=_service_account_id).first()
+        if user:
+            try:
+                oidc_profile = user.oidc_profile
+                return oidc_profile
+            except UserModel.oidc_profile.RelatedObjectDoesNotExist:
+                pass
+
     token_response, initiate_time = get_new_access_token()
 
     oidc_profile = update_or_create(
         token_response=token_response, initiate_time=initiate_time
     )
+    _service_account_id = oidc_profile.user.username
 
     return oidc_profile
 
