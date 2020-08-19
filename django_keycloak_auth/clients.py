@@ -70,24 +70,17 @@ def get_uma_client():
 
 
 def get_service_account_profile():
-    global _service_account_id
-    UserModel = django.contrib.auth.get_user_model()
-
-    if _service_account_id:
-        user = UserModel.objects.filter(username=_service_account_id).first()
-        if user:
-            try:
-                oidc_profile = user.oidc_profile
-                return oidc_profile
-            except UserModel.oidc_profile.RelatedObjectDoesNotExist:
-                pass
+    service_account_profile = models.RemoteUserOpenIdConnectProfile.objects.filter(is_service_account=True).first()
+    if service_account_profile:
+        return service_account_profile
 
     token_response, initiate_time = get_new_access_token()
 
     oidc_profile = update_or_create(
         token_response=token_response, initiate_time=initiate_time
     )
-    _service_account_id = oidc_profile.user.username
+    oidc_profile.is_service_account = True
+    oidc_profile.save()
 
     return oidc_profile
 

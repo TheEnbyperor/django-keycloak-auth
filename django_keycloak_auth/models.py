@@ -28,6 +28,8 @@ class RemoteUserOpenIdConnectProfile(models.Model):
         on_delete=models.CASCADE,
     )
 
+    is_service_account = models.BooleanField(blank=True, default=False)
+
     @property
     def is_active(self):
         if not self.access_token or not self.expires_before:
