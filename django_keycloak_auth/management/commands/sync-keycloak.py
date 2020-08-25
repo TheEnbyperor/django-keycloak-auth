@@ -14,10 +14,19 @@ class Command(BaseCommand):
         uma_client = clients.get_uma_client()
         access_token = clients.get_access_token()
 
+        resource_ids = []
+        offset = 0
+        while True:
+           this_resource_ids = uma_client.resource_set_list(token=access_token, max=100, first=offset)
+           resource_ids.extend(this_resource_ids)
+           if len(resource_ids) != 100:
+               break
+           offset += 100
+
         resources = list(
             map(
                 lambda r: uma_client.resource_set_read(token=access_token, id=r),
-                uma_client.resource_set_list(token=access_token),
+                resource_ids
             )
         )
 
