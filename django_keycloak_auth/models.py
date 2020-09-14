@@ -10,7 +10,7 @@ from . import clients
 class Nonce(models.Model):
     state = models.UUIDField(default=uuid.uuid4, unique=True)
     redirect_uri = models.CharField(max_length=255)
-    next_path = models.CharField(max_length=255, null=True)
+    next_path = models.TextField(null=True)
 
 
 class RemoteUserOpenIdConnectProfile(models.Model):
