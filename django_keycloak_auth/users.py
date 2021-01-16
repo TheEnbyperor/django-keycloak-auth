@@ -142,13 +142,21 @@ def get_or_create_user(federated_user_id=None, federated_user_name=None, federat
             return user
 
     admin_client = clients.get_keycloak_admin_client()
-    users = list(
-        map(
-            # Get a list of all user ID, then expand each ID to a full user object
-            lambda u: admin_client.users.by_id(u.get("id")).user,
-            admin_client.users.all(),
+
+    users = []
+    first = 0
+    inc = 500
+    while True:
+        new_users = admin_client._client.get(
+            url=admin_client._client.get_full_url(
+                'auth/admin/realms/{realm}/users?first={first}&max={max}'
+                    .format(realm=admin_client._name, first=first, max=inc)
+            )
         )
-    )
+        users.extend(new_users)
+        if len(new_users) < inc:
+            break
+        first += inc
 
     # If neither worked; create a new user
     def username_exists(username):
