@@ -25,7 +25,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1b234902-0f3e-4d1f-a07a-89aa117c68a2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +80,9 @@
       <workItem from="1597442080638" duration="17000" />
       <workItem from="1597841350218" duration="5127000" />
       <workItem from="1597926955159" duration="58000" />
-      <workItem from="1607772004034" duration="1719000" />
+      <workItem from="1607772004034" duration="2319000" />
+      <workItem from="1607892418991" duration="15000" />
+      <workItem from="1611764123191" duration="195000" />
     </task>
     <servers />
   </component>

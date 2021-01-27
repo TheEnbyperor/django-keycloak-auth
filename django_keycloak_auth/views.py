@@ -68,22 +68,22 @@ class LoginComplete(django.views.generic.RedirectView):
 
 class Logout(django.views.generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        if hasattr(self.request.user, "oidc_profile"):
-            clients.get_openid_connect_client().logout(
-                self.request.user.oidc_profile.refresh_token
-            )
-            self.request.user.oidc_profile.access_token = None
-            self.request.user.oidc_profile.expires_before = None
-            self.request.user.oidc_profile.refresh_token = None
-            self.request.user.oidc_profile.refresh_expires_before = None
-            self.request.user.oidc_profile.save(
-                update_fields=[
-                    "access_token",
-                    "expires_before",
-                    "refresh_token",
-                    "refresh_expires_before",
-                ]
-            )
+        # if hasattr(self.request.user, "oidc_profile"):
+        #     clients.get_openid_connect_client().logout(
+        #         self.request.user.oidc_profile.refresh_token
+        #     )
+        #     self.request.user.oidc_profile.access_token = None
+        #     self.request.user.oidc_profile.expires_before = None
+        #     self.request.user.oidc_profile.refresh_token = None
+        #     self.request.user.oidc_profile.refresh_expires_before = None
+        #     self.request.user.oidc_profile.save(
+        #         update_fields=[
+        #             "access_token",
+        #             "expires_before",
+        #             "refresh_token",
+        #             "refresh_expires_before",
+        #         ]
+        #     )
 
         django.contrib.auth.logout(self.request)
 
