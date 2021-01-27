@@ -19,7 +19,7 @@ class Command(BaseCommand):
         while True:
            this_resource_ids = uma_client.resource_set_list(token=access_token, max=100, first=offset)
            resource_ids.extend(this_resource_ids)
-           if len(resource_ids) != 100:
+           if len(this_resource_ids) != 100:
                break
            offset += 100
 
