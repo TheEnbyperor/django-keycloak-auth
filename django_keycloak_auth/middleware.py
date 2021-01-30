@@ -37,7 +37,7 @@ class OIDCChannelsMiddleware:
     def __init__(self, inner):
         self.inner = inner
 
-    def __call__(self, scope):
+    def __call__(self, scope, *args, **kwargs):
         close_old_connections()
 
         origin_user = scope.get("user")
@@ -46,4 +46,4 @@ class OIDCChannelsMiddleware:
             lambda: get_user(scope.get("session"), origin_user=origin_user)
         )
 
-        return self.inner(dict(scope, user=user))
+        return self.inner(dict(scope, user=user), *args, **kwargs)
