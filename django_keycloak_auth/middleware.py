@@ -1,7 +1,7 @@
 import django.contrib.auth.models
 import django.utils.functional
 from django.db import close_old_connections
-from . import auth
+from . import auth, models
 
 
 def get_user(session, origin_user):
@@ -29,6 +29,12 @@ class OIDCMiddleware:
         request.user = django.utils.functional.SimpleLazyObject(
             lambda: get_user(request.session, origin_user=origin_user)
         )
+
+        if "oidc_session_id" in request.session:
+            sessions = models.InvalidatedSessions.objects.filter(session_id=request.session["oidc_session_id"])
+            if len(sessions):
+                django.contrib.auth.logout(request)
+                sessions.delete()
 
         return self.get_response(request)
 

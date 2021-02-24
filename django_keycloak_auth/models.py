@@ -13,6 +13,15 @@ class Nonce(models.Model):
     next_path = models.TextField(null=True)
 
 
+class LogoutState(models.Model):
+    state = models.UUIDField(default=uuid.uuid4, unique=True)
+    next_path = models.TextField(null=True)
+
+
+class InvalidatedSessions(models.Model):
+    session_id = models.UUIDField(default=uuid.uuid4, unique=True)
+
+
 class RemoteUserOpenIdConnectProfile(models.Model):
     access_token = models.TextField(null=True)
     expires_before = models.DateTimeField(null=True)

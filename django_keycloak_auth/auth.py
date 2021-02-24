@@ -140,11 +140,15 @@ class KeycloakAuthorization:
                 return True
         return False
 
-    def authenticate(self, request, code, redirect_uri):
+    def authenticate(self, request, code, redirect_uri, session_state):
         client = clients.get_openid_connect_client()
 
         initiate_time = django.utils.timezone.now()
-        token_response = client.authorization_code(code=code, redirect_uri=redirect_uri)
+        token_response = client._token_request(
+            grant_type="authorization_code",
+            code=code, redirect_uri=redirect_uri,
+            client_session_state=session_state
+        )
 
         return clients.update_or_create(
             token_response=token_response, initiate_time=initiate_time
