@@ -1,7 +1,12 @@
 import django.contrib.auth.models
 import django.utils.functional
+import django.shortcuts
 from django.db import close_old_connections
 from . import auth, models
+
+class OIDCRedirect(Exception):
+    def __init__(self, url):
+        self.url = url
 
 
 def get_user(session, origin_user):
@@ -37,6 +42,11 @@ class OIDCMiddleware:
                 sessions.delete()
 
         return self.get_response(request)
+
+    @staticmethod
+    def process_exception(_request, exception):
+        if isinstance(exception, OIDCRedirect):
+            return django.shortucts.redirect(exception.url)
 
 
 class OIDCChannelsMiddleware:

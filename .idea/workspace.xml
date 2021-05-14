@@ -23,11 +23,23 @@
     <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b234902-0f3e-4d1f-a07a-89aa117c68a2" name="Default Changelist" comment="" />
+    <list default="true" id="1b234902-0f3e-4d1f-a07a-89aa117c68a2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/django_keycloak_auth/broker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/middleware.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -92,10 +104,26 @@
       <workItem from="1614160087103" duration="6844000" />
       <workItem from="1617894200675" duration="74000" />
       <workItem from="1617984130199" duration="1226000" />
+      <workItem from="1618408545736" duration="1319000" />
+      <workItem from="1618419322579" duration="196000" />
+      <workItem from="1618419893248" duration="171000" />
+      <workItem from="1618476742952" duration="332000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
