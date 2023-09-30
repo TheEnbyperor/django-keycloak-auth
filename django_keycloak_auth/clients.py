@@ -1,5 +1,4 @@
 import datetime
-
 import django.contrib.auth
 import django.db.transaction
 import django.utils.timezone
@@ -193,7 +192,7 @@ def get_active_access_token(oidc_profile):
     if not oidc_profile.access_token:
         raise TokensExpired()
 
-    if initiate_time > oidc_profile.expires_before:
+    if (initiate_time + datetime.timedelta(minutes=1)) > oidc_profile.expires_before:
         if not oidc_profile.refresh_token:
             raise TokensExpired()
         # Refresh token

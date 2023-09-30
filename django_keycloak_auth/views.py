@@ -113,6 +113,7 @@ class Logout(django.views.generic.RedirectView):
         # if hasattr(self.request.user, "oidc_profile"):
         oidc_logout_url = clients.get_openid_connect_client().get_url("end_session_endpoint")
         oidc_logout_url_params = urllib.parse.urlencode({
+            "client_id": django.conf.settings.OIDC_CLIENT_ID,
             "state": str(logout_state.state),
             "post_logout_redirect_uri": self.request.build_absolute_uri(
                 location=django.urls.reverse("oidc_logout_complete")
