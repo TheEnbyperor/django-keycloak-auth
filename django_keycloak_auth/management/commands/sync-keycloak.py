@@ -7,7 +7,7 @@ from django_keycloak_auth import clients
 
 
 class Command(BaseCommand):
-    help = "Synchronises models to keylcloak"
+    help = "Synchronises models to Keycloak"
     requires_migrations_checks = True
 
     def handle(self, *args, **options):

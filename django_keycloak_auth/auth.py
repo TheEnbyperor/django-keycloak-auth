@@ -79,10 +79,14 @@ def remote_user_login(request, user, backend=None):
 
 
 class KeycloakAuthorization:
-    def get_user(self, user_id):
-        UserModel = django.contrib.auth.get_user_model()
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def get_user(user_id):
+        user_model = django.contrib.auth.get_user_model()
         try:
-            user_obj = UserModel.objects.get(pk=user_id)
+            user_obj = user_model.objects.get(pk=user_id)
 
             try:
                 clients.get_entitlement(oidc_profile=user_obj.oidc_profile)
@@ -90,7 +94,7 @@ class KeycloakAuthorization:
                 return None
 
             return user_obj
-        except UserModel.DoesNotExist:
+        except user_model.DoesNotExist:
             return None
 
     def get_all_permissions(self, user_obj, obj=None):
@@ -102,7 +106,8 @@ class KeycloakAuthorization:
             )
         return user_obj._keycloak_perm_cache
 
-    def get_keycloak_permissions(self, user_obj):
+    @staticmethod
+    def get_keycloak_permissions(user_obj):
         if not hasattr(user_obj, "oidc_profile"):
             return set()
 
@@ -140,7 +145,8 @@ class KeycloakAuthorization:
                 return True
         return False
 
-    def authenticate(self, request, code, redirect_uri, session_state):
+    @staticmethod
+    def authenticate(request, code, redirect_uri, session_state):
         client = clients.get_openid_connect_client()
 
         initiate_time = django.utils.timezone.now()

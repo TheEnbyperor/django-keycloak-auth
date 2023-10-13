@@ -109,14 +109,14 @@ def get_access_token():
 
 
 def update_or_create_user_and_oidc_profile(id_token_object):
-    UserModel = django.contrib.auth.get_user_model()
-    email_field_name = UserModel.get_email_field_name()
+    user_model = django.contrib.auth.get_user_model()
+    email_field_name = user_model.get_email_field_name()
     roles = (
         id_token_object.get("resource_access", {})
         .get(django.conf.settings.OIDC_CLIENT_ID, {})
         .get("roles", [])
     )
-    user, _ = UserModel.objects.update_or_create(
+    user, _ = user_model.objects.update_or_create(
         username=id_token_object["sub"],
         defaults={
             email_field_name: id_token_object.get("email", ""),
