@@ -54,11 +54,17 @@ class Login(django.views.generic.RedirectView):
 
         self.request.session["oidc_state"] = str(nonce.state)
 
+        kwargs = {}
+        if self.request.GET.get("key"):
+            kwargs["key"] = self.request.GET.get("key")
+        if self.request.GET.get("kc_action"):
+            kwargs["kc_action"] = self.request.GET.get("kc_action")
+
         authorization_url = clients.get_openid_connect_client().authorization_url(
             redirect_uri=nonce.redirect_uri,
             scope=django.conf.settings.OIDC_SCOPES,
             state=str(nonce.state),
-            key=self.request.GET.get("key")
+            **kwargs
         )
 
         return authorization_url
@@ -110,7 +116,6 @@ class Logout(django.views.generic.RedirectView):
             next_path=next
         )
 
-        # if hasattr(self.request.user, "oidc_profile"):
         oidc_logout_url = clients.get_openid_connect_client().get_url("end_session_endpoint")
         oidc_logout_url_params = urllib.parse.urlencode({
             "client_id": django.conf.settings.OIDC_CLIENT_ID,
@@ -123,22 +128,6 @@ class Logout(django.views.generic.RedirectView):
         django.contrib.auth.logout(self.request)
 
         return f"{oidc_logout_url}?{oidc_logout_url_params}"
-
-        #     clients.get_openid_connect_client().logout(
-        #         self.request.user.oidc_profile.refresh_token
-        #     )
-        #     self.request.user.oidc_profile.access_token = None
-        #     self.request.user.oidc_profile.expires_before = None
-        #     self.request.user.oidc_profile.refresh_token = None
-        #     self.request.user.oidc_profile.refresh_expires_before = None
-        #     self.request.user.oidc_profile.save(
-        #         update_fields=[
-        #             "access_token",
-        #             "expires_before",
-        #             "refresh_token",
-        #             "refresh_expires_before",
-        #         ]
-        #     )
 
 
 class LogoutComplete(django.views.generic.RedirectView):
