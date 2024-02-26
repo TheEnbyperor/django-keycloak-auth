@@ -59,7 +59,7 @@ class RemoteUserOpenIdConnectProfile(models.Model):
         client = clients.get_openid_connect_client()
         return client.decode_token(
             token=self.access_token,
-            keys=client.certs(),
+            key=client.certs(),
             algorithms=client.well_known["id_token_signing_alg_values_supported"],
         )
 
