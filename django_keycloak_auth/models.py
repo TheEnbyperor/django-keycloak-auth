@@ -60,7 +60,7 @@ class RemoteUserOpenIdConnectProfile(models.Model):
         return client.decode_token(
             token=self.access_token,
             keys=client.certs(),
-            algorithms=client.well_known["access_token_signing_alg_values_supported"],
+            algorithms=client.well_known["id_token_signing_alg_values_supported"],
         )
 
     @property
