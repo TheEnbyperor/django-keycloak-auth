@@ -27,13 +27,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b234902-0f3e-4d1f-a07a-89aa117c68a2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/django_keycloak_auth/management/commands/keycloak-events.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/django-keycloak-auth.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/django-keycloak-auth.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/django_keycloak_auth/migrations/0006_idtokens.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/auth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/django_keycloak_auth/clients.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/clients.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/management/commands/sync-keycloak.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/management/commands/sync-keycloak.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/django_keycloak_auth/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/django_keycloak_auth/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,22 +71,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/q/Documents/django-keycloak-auth&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/q/Documents/django-keycloak-auth/django_keycloak_auth/migrations",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/django_keycloak_auth/migrations" />
@@ -279,7 +276,9 @@
       <workItem from="1667246873558" duration="553000" />
       <workItem from="1667334126042" duration="1195000" />
       <workItem from="1696093556584" duration="660000" />
-      <workItem from="1697225821922" duration="615000" />
+      <workItem from="1697225821922" duration="1804000" />
+      <workItem from="1697274974346" duration="908000" />
+      <workItem from="1708943991960" duration="254000" />
     </task>
     <servers />
   </component>

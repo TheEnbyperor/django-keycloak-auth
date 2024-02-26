@@ -168,15 +168,15 @@ def update_tokens(token_model, token_response, initiate_time):
     token_model.expires_before = expires_before
     token_model.refresh_token = token_response.get("refresh_token")
     token_model.refresh_expires_before = refresh_expires_before
+    token_model.id_token = token_response.get("id_token")
 
-    token_model.save(
-        update_fields=[
-            "access_token",
-            "expires_before",
-            "refresh_token",
-            "refresh_expires_before",
-        ]
-    )
+    token_model.save(update_fields=[
+        "access_token",
+        "expires_before",
+        "refresh_token",
+        "refresh_expires_before",
+        "id_token",
+    ])
     return token_model
 
 

@@ -26,6 +26,8 @@ class RemoteUserOpenIdConnectProfile(models.Model):
     access_token = models.TextField(null=True)
     expires_before = models.DateTimeField(null=True)
 
+    id_token = models.TextField(blank=True, null=True)
+
     refresh_token = models.TextField(null=True)
     refresh_expires_before = models.DateTimeField(null=True)
 
@@ -53,9 +55,25 @@ class RemoteUserOpenIdConnectProfile(models.Model):
         """
         if not self.is_active:
             return None
+
         client = clients.get_openid_connect_client()
-        return clients.get_openid_connect_client().decode_token(
+        return client.decode_token(
             token=self.access_token,
             keys=client.certs(),
+            algorithms=client.well_known["access_token_signing_alg_values_supported"],
+        )
+
+    @property
+    def id_data(self):
+        """
+        :rtype: dict
+        """
+        if not self.id_token:
+            return None
+
+        client = clients.get_openid_connect_client()
+        return client.decode_token(
+            token=self.id_token,
+            key=client.certs(),
             algorithms=client.well_known["id_token_signing_alg_values_supported"],
         )
