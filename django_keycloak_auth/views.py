@@ -159,12 +159,16 @@ class LogoutComplete(django.views.generic.RedirectView):
         request = self.request
 
         if "state" not in request.GET:
-            return django.http.HttpResponseBadRequest()
+            return django.http.HttpResponseRedirect(django.urls.reverse(
+                django.conf.settings.LOGOUT_REDIRECT_URL
+            ))
 
         try:
             nonce = auth.models.LogoutState.objects.get(state=request.GET["state"])
         except auth.models.Nonce.DoesNotExist:
-            return django.http.HttpResponseRedirect(django.urls.reverse("oidc_login"))
+            return django.http.HttpResponseRedirect(django.urls.reverse(
+                django.conf.settings.LOGOUT_REDIRECT_URL
+            ))
 
         nonce.delete()
 
