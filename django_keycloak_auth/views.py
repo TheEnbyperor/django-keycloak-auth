@@ -58,7 +58,14 @@ class Login(django.views.generic.RedirectView):
         if self.request.GET.get("key"):
             kwargs["key"] = self.request.GET.get("key")
         if self.request.GET.get("kc_action"):
-            kwargs["kc_action"] = self.request.GET.get("kc_action")
+            kc_action = self.request.GET.get("kc_action")
+            kwargs["kc_action"] = kc_action
+            self.request.session["oidc_kc_action"] = kc_action
+        if self.request.GET.get("prompt"):
+            prompt = self.request.GET.get("prompt")
+            kwargs["prompt"] = prompt
+            self.request.session["oidc_prompt"] = prompt
+
 
         authorization_url = clients.get_openid_connect_client().authorization_url(
             redirect_uri=nonce.redirect_uri,
@@ -74,22 +81,39 @@ class LoginComplete(django.views.generic.RedirectView):
     def get(self, *args, **kwargs):
         request = self.request
 
-        if "error" in request.GET:
-            return django.http.HttpResponseServerError(request.GET["error"])
-
-        if "code" not in request.GET and "state" not in request.GET:
+        if "state" not in request.GET:
             return django.http.HttpResponseBadRequest()
 
+        login_url = django.urls.reverse("oidc_login")
+        login_url_params = {}
+
+        if "oidc_prompt" in login_url:
+            login_url_params["prompt"] = request.session["oidc_prompt"]
+        if "oidc_kc_action" in login_url:
+            login_url_params["kc_action"] = request.session["oidc_kc_action"]
+
+        login_url = f"{login_url}?{urllib.parse.urlencode(login_url_params)}"
+
         if (
-            "oidc_state" not in request.session
-            or request.GET["state"] != request.session["oidc_state"]
+                "oidc_state" not in request.session
+                or request.GET["state"] != request.session["oidc_state"]
         ):
-            return django.http.HttpResponseRedirect(django.urls.reverse("oidc_login"))
+            return django.http.HttpResponseRedirect(login_url)
 
         try:
             nonce = auth.models.Nonce.objects.get(state=request.GET["state"])
         except auth.models.Nonce.DoesNotExist:
-            return django.http.HttpResponseRedirect(django.urls.reverse("oidc_login"))
+            return django.http.HttpResponseRedirect(login_url)
+
+        if "error" in request.GET:
+            error = request.GET["error"]
+            if error in ("login_required", "access_denied"):
+                return django.http.HttpResponseRedirect(nonce.next_path or "/")
+
+            return django.http.HttpResponseServerError(request.GET["error"])
+
+        if "code" not in request.GET:
+            return django.http.HttpResponseBadRequest()
 
         session_state = uuid.uuid4()
         user = django.contrib.auth.authenticate(
