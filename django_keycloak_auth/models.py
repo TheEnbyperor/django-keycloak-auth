@@ -4,6 +4,9 @@ import django.core.exceptions
 import django.utils.timezone
 from django.db import models
 import uuid
+
+from requests import options
+
 from . import clients
 
 
@@ -77,4 +80,8 @@ class RemoteUserOpenIdConnectProfile(models.Model):
             key=client.certs(),
             algorithms=client.well_known["id_token_signing_alg_values_supported"],
             access_token=self.access_token,
+            options={
+                "verify_signature": False,
+                "verify_exp": False,
+            }
         )
